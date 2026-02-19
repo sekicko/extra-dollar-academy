@@ -10,9 +10,6 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Serve static files from frontend
-app.use(express.static('../frontend'));
-
 // MongoDB Connection
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/extra_dollar_academy')
   .then(() => console.log('✓ MongoDB connected successfully'))
@@ -36,11 +33,6 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/support', supportRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/settings', settingsRoutes);
-
-// Home route - Serve frontend
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/../frontend/index.html');
-});
 
 // Error handling middleware
 app.use((err, req, res, next) => {

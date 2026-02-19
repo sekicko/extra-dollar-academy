@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Courses - Extra Dollar Academy</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="dashboard-page">
+  <div class="animated-bg"></div>
+  <div class="falling-container"></div>
+
+  <header>
+    <h1>💰 EXTRA DOLLAR ACADEMY 💰</h1>
+    <nav></nav>
+  </header>
+
+  <div class="container">
+    <h2 style="color: var(--golden); margin: 2rem 0;">📚 Available Courses</h2>
+
+    <!-- Filter Options -->
+    <div style="display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap;">
+      <button class="btn btn-secondary" onclick="filterCourses('all')">All Courses</button>
+      <button class="btn btn-secondary" onclick="filterCourses('Risk Management')">Risk Management</button>
+      <button class="btn btn-secondary" onclick="filterCourses('Trading Strategies')">Trading Strategies</button>
+      <button class="btn btn-secondary" onclick="filterCourses('Psychology')">Psychology</button>
+    </div>
+
+    <!-- Courses Grid -->
+    <div id="coursesContainer" class="grid grid-3">
+      <div class="spinner"></div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <h3>💰 Extra Dollar Academy - Support Center 💰</h3>
+    <p>Expand your trading knowledge</p>
+    
+    <!-- Social Media Links with Twinkling Logos -->
+    <div style="margin: 2rem 0; padding: 2rem 0; border-top: 2px solid var(--accent-blue); border-bottom: 2px solid var(--accent-blue); text-align: center;">
+      <p style="color: var(--golden); margin-bottom: 1.5rem; font-size: 1rem; font-weight: bold;">✨ Follow Us On Social Media ✨</p>
+      <div id="footerSocialLinks" style="display: flex; justify-content: center; flex-wrap: wrap;"></div>
+    </div>
+    
+    <!-- Support Center Info at Bottom -->
+    <div class="footer-links">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="support.html">Support</a>
+    </div>
+  </footer>
+
+  <script src="../js/api.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    let allCourses = [];
+
+    // Load courses
+    async function loadCourses() {
+      try {
+        const courses = await apiCall('/courses', 'GET');
+        allCourses = courses;
+        renderCourses(courses);
+      } catch (error) {
+        document.getElementById('coursesContainer').innerHTML = '<p style="color: var(--error-red);">Error loading courses</p>';
+      }
+    }
+
+    // Render courses
+    function renderCourses(courses) {
+      const container = document.getElementById('coursesContainer');
+      
+      if (courses.length === 0) {
+        container.innerHTML = '<p style="color: var(--light-text);">No courses available</p>';
+        return;
+      }
+
+      container.innerHTML = courses.map(course => `
+        <div class="card">
+          <h3>${course.title}</h3>
+          <p><strong>Category:</strong> ${course.category}</p>
+          <p><strong>Level:</strong> ${course.level || 'Beginner'}</p>
+          <p><strong>Price:</strong> $${course.price}</p>
+          <p style="color: #888; margin: 1rem 0;">${course.description || 'Master this essential trading concept'}</p>
+          <div style="display: flex; gap: 0.5rem;">
+            <button class="btn btn-primary twinkle" onclick="enrollCourse('${course._id}')" style="flex: 1;">Enroll Now</button>
+            <button class="btn btn-secondary twinkle" onclick="viewCourseDetails('${course._id}')">Details</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Filter courses
+    function filterCourses(category) {
+      if (category === 'all') {
+        renderCourses(allCourses);
+      } else {
+        renderCourses(allCourses.filter(c => c.category === category));
+      }
+    }
+
+    // Enroll in course
+    async function enrollCourse(courseId) {
+      if (!isLoggedIn()) {
+        showAlert('Please login to enroll in courses', 'error');
+        setTimeout(() => window.location.href = 'login.html', 1500);
+        return;
+      }
+
+      try {
+        const user = getUser();
+        await apiCall(`/users/${user.id}/enroll/${courseId}`, 'POST');
+        showAlert('Successfully enrolled in course!', 'success');
+      } catch (error) {
+        showAlert(error.message, 'error');
+      }
+    }
+
+    // View detailed course
+    function viewCourseDetails(courseId) {
+      const course = allCourses.find(c => c._id === courseId);
+      if (course) {
+        alert(`Course: ${course.title}\n\nDescription: ${course.description}\n\nPrice: $${course.price}\n\nInstructor will provide detailed materials after enrollment.`);
+      }
+    }
+
+    loadCourses();
+  </script>
+</body>
+</html>

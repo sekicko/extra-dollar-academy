@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Support Center - Extra Dollar Academy</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="dashboard-page">
+  <div class="animated-bg"></div>
+  <div class="falling-container"></div>
+
+  <header>
+    <h1>💰 EXTRA DOLLAR ACADEMY 💰</h1>
+    <nav></nav>
+  </header>
+
+  <div class="container">
+    <h2 style="color: var(--golden); margin: 2rem 0;">📞 Support Center</h2>
+
+    <!-- Support Navigation -->
+    <div style="display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap;">
+      <button class="btn btn-primary" onclick="showSupport('ticket')">Create Ticket</button>
+      <button class="btn btn-secondary" onclick="showSupport('tickets')">My Tickets</button>
+      <button class="btn btn-secondary" onclick="showSupport('faq')">FAQ</button>
+    </div>
+
+    <!-- Create Support Ticket -->
+    <div id="ticket" class="support-panel" style="max-width: 600px;">
+      <h3 style="color: var(--golden); margin-bottom: 1rem;">Create a Support Ticket</h3>
+      <div class="card">
+        <form id="supportForm">
+          <div class="form-group">
+            <label for="subject">Subject</label>
+            <input type="text" id="subject" required placeholder="Briefly describe your issue">
+          </div>
+
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea id="message" rows="6" required placeholder="Provide detailed information about your issue"></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary twinkle" style="width: 100%;">Submit Ticket</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- My Tickets -->
+    <div id="tickets" class="support-panel" style="display: none;">
+      <h3 style="color: var(--golden); margin-bottom: 1rem;">Your Support Tickets</h3>
+      <div id="ticketsList" class="grid grid-1">
+        <p style="color: #888;">Loading tickets...</p>
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <div id="faq" class="support-panel" style="display: none;">
+      <h3 style="color: var(--golden); margin-bottom: 1rem;">Frequently Asked Questions</h3>
+      
+      <div class="card">
+        <h4 style="color: var(--golden);">How do I cancel my subscription?</h4>
+        <p>You can cancel your subscription anytime from your profile settings. No questions asked.</p>
+      </div>
+
+      <div class="card">
+        <h4 style="color: var(--golden);">How long do I have access to purchased courses?</h4>
+        <p>You have lifetime access to all purchased courses. You can watch them anytime, anywhere.</p>
+      </div>
+
+      <div class="card">
+        <h4 style="color: var(--golden);">Do trading bots work on all platforms?</h4>
+        <p>Our MT5 EAs work on MetaTrader 5. XML bots work on Deriv platform. Check product compatibility.</p>
+      </div>
+
+      <div class="card">
+        <h4 style="color: var(--golden);">What is your refund policy?</h4>
+        <p>We offer 30-day money-back guarantee on all courseware. Trading tools have a 7-day refund window.</p>
+      </div>
+
+      <div class="card">
+        <h4 style="color: var(--golden);">Is my payment secure?</h4>
+        <p>Yes, we use industry-standard SSL encryption and trusted payment processors to protect your data.</p>
+      </div>
+
+      <div class="card">
+        <h4 style="color: var(--golden);">How do I update my trading bot?</h4>
+        <p>Download the latest version from your account dashboard. Updates are free for purchased products.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <h3>💰 Extra Dollar Academy - Support Center 💰</h3>
+    <p><strong>We're here to help 24/7!</strong></p>
+    
+    <!-- Social Media Links with Twinkling Logos -->
+    <div style="margin: 2rem 0; padding: 2rem 0; border-top: 2px solid var(--accent-blue); border-bottom: 2px solid var(--accent-blue); text-align: center;">
+      <p style="color: var(--golden); margin-bottom: 1.5rem; font-size: 1rem; font-weight: bold;">✨ Follow Us On Social Media ✨</p>
+      <div id="footerSocialLinks" style="display: flex; justify-content: center; flex-wrap: wrap;"></div>
+    </div>
+    
+    <!-- Support Center Info at Bottom -->
+    <div style="margin-top: 1rem;">
+      <p><strong>📧 Email:</strong> support@extradollaracademy.com</p>
+      <p><strong>📞 Phone:</strong> +1-XXX-XXXX-XXXX</p>
+      <p><strong>⏰ Hours:</strong> Monday - Sunday, 24 hours</p>
+      <p><strong>💬 Live Chat:</strong> Available on all pages</p>
+    </div>
+    <div class="footer-links">
+      <a href="../index.html">Home</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="#status">System Status</a>
+    </div>
+    <p style="margin-top: 1rem; font-size: 0.9rem;">Average response time: 2 hours | Satisfaction rate: 98%</p>
+  </footer>
+
+  <script src="../js/api.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    // Show/Hide support panels
+    function showSupport(panel) {
+      document.querySelectorAll('.support-panel').forEach(p => p.style.display = 'none');
+      document.getElementById(panel).style.display = 'block';
+
+      if (panel === 'tickets') {
+        loadTickets();
+      }
+    }
+
+    // Submit support ticket
+    document.getElementById('supportForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      if (!isLoggedIn()) {
+        showAlert('Please login to create a support ticket', 'error');
+        return;
+      }
+
+      try {
+        const user = getUser();
+        await apiCall('/support', 'POST', {
+          userId: user.id,
+          subject: document.getElementById('subject').value,
+          message: document.getElementById('message').value
+        });
+
+        showAlert('Support ticket created successfully! We\'ll respond shortly.', 'success');
+        document.getElementById('supportForm').reset();
+      } catch (error) {
+        showAlert(error.message, 'error');
+      }
+    });
+
+    // Load user tickets
+    async function loadTickets() {
+      if (!isLoggedIn()) {
+        document.getElementById('ticketsList').innerHTML = '<p style="color: var(--error-red);">Please login to view tickets</p>';
+        return;
+      }
+
+      try {
+        const user = getUser();
+        const tickets = await apiCall(`/support/user/${user.id}`, 'GET');
+
+        if (tickets.length === 0) {
+          document.getElementById('ticketsList').innerHTML = '<p style="color: #888;">You have no support tickets yet.</p>';
+          return;
+        }
+
+        document.getElementById('ticketsList').innerHTML = tickets.map(ticket => {
+          const statusEmoji = {
+            'Open': '🔴',
+            'In Progress': '🟡',
+            'Resolved': '🟢',
+            'Closed': '⚫'
+          };
+
+          return `
+            <div class="card" style="border-left: 4px solid var(--golden);">
+              <div style="display: grid; grid-template-columns: 1fr auto; gap: 1rem; align-items: start;">
+                <div>
+                  <h4 style="color: var(--golden); margin-bottom: 0.5rem;">${ticket.subject}</h4>
+                  <p style="margin: 0.3rem 0; color: #999; font-size: 0.9rem;">Created: ${new Date(ticket.createdAt).toLocaleString()}</p>
+                </div>
+                <div style="text-align: right;">
+                  <p style="font-size: 1.2rem; margin: 0;">${statusEmoji[ticket.status]} ${ticket.status}</p>
+                  <p style="color: #999; font-size: 0.85rem; margin: 0;">Priority: ${ticket.priority}</p>
+                </div>
+              </div>
+              <p style="background: rgba(26, 61, 92, 0.2); padding: 0.8rem; margin: 1rem 0 0 0; border-radius: 4px; color: #999;">${ticket.message}</p>
+              
+              ${ticket.responses && ticket.responses.length > 0 ? `
+                <div style="margin-top: 1rem; background: rgba(15, 31, 53, 0.3); padding: 1rem; border-radius: 4px;">
+                  <p style="color: var(--golden); font-weight: bold; margin: 0 0 0.8rem 0;">💬 Admin Responses (${ticket.responses.length})</p>
+                  ${ticket.responses.map(response => `
+                    <div style="background: rgba(26, 61, 92, 0.2); padding: 0.8rem; margin-bottom: 0.5rem; border-radius: 4px; border-left: 3px solid var(--golden);">
+                      <p style="color: var(--golden); font-weight: bold; margin: 0 0 0.3rem 0;">↳ ${response.responder?.username || 'Support Team'}</p>
+                      <p style="color: #999; font-size: 0.85rem; margin: 0 0 0.5rem 0;">${new Date(response.date).toLocaleString()}</p>
+                      <p style="margin: 0; color: #ddd;">${response.message}</p>
+                    </div>
+                  `).join('')}
+                </div>
+              ` : `
+                <p style="margin-top: 1rem; color: #888; font-style: italic;">No admin responses yet. We'll get back to you soon!</p>
+              `}
+            </div>
+          `;
+        }).join('');
+      } catch (error) {
+        document.getElementById('ticketsList').innerHTML = '<p style="color: var(--error-red);">Error loading tickets</p>';
+      }
+    }
+  </script>
+</body>
+</html>

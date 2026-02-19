@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Extra Dollar Academy</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="dashboard-page">
+  <div class="animated-bg"></div>
+  <div class="falling-container"></div>
+  
+  <!-- Welcome Message -->
+  <div class="welcome-message">
+    <div>Welcome <span class="username" id="welcomeUsername">User</span>!</div>
+    <div class="status">✓ You're active now</div>
+  </div>
+
+  <header>
+    <h1>💰 EXTRA DOLLAR ACADEMY 💰</h1>
+    <nav></nav>
+  </header>
+
+  <div class="container">
+    <h2 style="color: var(--golden); margin: 2rem 0;">Your Dashboard</h2>
+
+    <!-- Dashboard Navigation Tabs -->
+    <div style="display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap;">
+      <button class="btn btn-primary twinkle" onclick="showTab('overview')">Overview</button>
+      <button class="btn btn-secondary twinkle" onclick="showTab('courses')">My Courses</button>
+      <button class="btn btn-secondary twinkle" onclick="showTab('products')">My Products</button>
+      <button class="btn btn-secondary twinkle" onclick="showTab('profile')">Profile</button>
+    </div>
+
+    <!-- Overview Tab -->
+    <div id="overview" class="tab-content">
+      <div class="grid grid-2">
+        <div class="card">
+          <h3>📚 Courses Enrolled</h3>
+          <p style="font-size: 2rem; color: var(--golden); margin: 1rem 0;">0</p>
+          <p>You haven't enrolled in any courses yet. <a href="courses.html" style="color: var(--golden);">Browse courses</a></p>
+        </div>
+
+        <div class="card">
+          <h3>🤖 Products Purchased</h3>
+          <p style="font-size: 2rem; color: var(--golden); margin: 1rem 0;">0</p>
+          <p>Explore our trading bots and EAs. <a href="products.html" style="color: var(--golden);">View products</a></p>
+        </div>
+
+        <div class="card">
+          <h3>💰 Total Spent</h3>
+          <p style="font-size: 2rem; color: var(--golden); margin: 1rem 0;">$0.00</p>
+          <p>Track your investments in education and tools</p>
+        </div>
+
+        <div class="card">
+          <h3>📊 Progress</h3>
+          <p style="font-size: 2rem; color: var(--golden); margin: 1rem 0;">0%</p>
+          <p>Complete courses and lessons to earn certificates</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- My Courses Tab -->
+    <div id="courses" class="tab-content" style="display: none;">
+      <h3 style="color: var(--golden); margin-bottom: 1rem;">Enrolled Courses</h3>
+      <div id="enrolledCourses" class="grid grid-3">
+        <p style="color: #888;">No courses yet. <a href="courses.html" style="color: var(--golden);">Explore courses</a></p>
+      </div>
+    </div>
+
+    <!-- My Products Tab -->
+    <div id="products" class="tab-content" style="display: none;">
+      <h3 style="color: var(--golden); margin-bottom: 1rem;">Purchased Products</h3>
+      <div id="purchasedProducts" class="grid grid-3">
+        <p style="color: #888;">No products purchased yet. <a href="products.html" style="color: var(--golden);">View products</a></p>
+      </div>
+    </div>
+
+    <!-- Profile Tab -->
+    <div id="profile" class="tab-content" style="display: none;">
+      <div style="max-width: 500px;">
+        <div class="card">
+          <h3>✏️ Update Profile</h3>
+          <form id="profileForm">
+            <div class="form-group">
+              <label for="username">Username</label>
+              <input type="text" id="username" required>
+            </div>
+
+            <div class="form-group">
+              <label for="userEmail">Email</label>
+              <input type="email" id="userEmail" required>
+            </div>
+
+            <div class="form-group">
+              <label for="userPhone">Phone</label>
+              <input type="text" id="userPhone" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Save Changes</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <h3>💰 Extra Dollar Academy - Support Center 💰</h3>
+    <p>Need help? Contact our support team</p>
+    
+    <!-- Social Media Links with Twinkling Logos -->
+    <div style="margin: 2rem 0; padding: 2rem 0; border-top: 2px solid var(--accent-blue); border-bottom: 2px solid var(--accent-blue); text-align: center;">
+      <p style="color: var(--golden); margin-bottom: 1.5rem; font-size: 1rem; font-weight: bold;">✨ Follow Us On Social Media ✨</p>
+      <div id="footerSocialLinks" style="display: flex; justify-content: center; flex-wrap: wrap;"></div>
+    </div>
+    
+    <!-- Support Center Info at Bottom -->
+    <div class="footer-links">
+      <a href="support.html">Contact Support</a>
+      <a href="#faq">FAQ</a>
+      <a href="#status">System Status</a>
+    </div>
+  </footer>
+
+  <script src="../js/api.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    // Display welcome message with username
+    document.addEventListener('DOMContentLoaded', function() {
+      const user = getUser();
+      if (user && user.username) {
+        document.getElementById('welcomeUsername').textContent = user.username;
+      }
+    });
+  
+    // Check if user is logged in
+    if (!isLoggedIn()) {
+      window.location.href = 'login.html';
+    }
+
+    // Load user profile on page load
+    async function loadUserProfile() {
+      try {
+        const user = getUser();
+        const response = await apiCall(`/users/${user.id}`, 'GET');
+
+        document.getElementById('username').value = response.username;
+        document.getElementById('userEmail').value = response.email;
+        document.getElementById('userPhone').value = response.phone;
+      } catch (error) {
+        console.error('Error loading profile:', error);
+      }
+    }
+
+    // Tab switching
+    function showTab(tabName) {
+      const tabs = document.querySelectorAll('.tab-content');
+      tabs.forEach(tab => tab.style.display = 'none');
+      document.getElementById(tabName).style.display = 'block';
+    }
+
+    // Update profile
+    document.getElementById('profileForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      try {
+        const user = getUser();
+        await apiCall(`/users/${user.id}`, 'PUT', {
+          username: document.getElementById('username').value,
+          email: document.getElementById('userEmail').value,
+          phone: document.getElementById('userPhone').value
+        });
+
+        showAlert('Profile updated successfully!', 'success');
+      } catch (error) {
+        showAlert(error.message, 'error');
+      }
+    });
+
+    loadUserProfile();
+  </script>
+</body>
+</html>

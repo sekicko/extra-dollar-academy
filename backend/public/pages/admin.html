@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel - Extra Dollar Academy</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="dashboard-page">
+  <div class="animated-bg"></div>
+  <div class="falling-container"></div>
+  
+  <!-- Welcome Message -->
+  <div class="welcome-message">
+    <div>Welcome <span class="username" id="welcomeUsername">Admin</span>!</div>
+    <div class="status">✓ You're active now</div>
+  </div>
+
+  <header>
+    <h1>💰 EXTRA DOLLAR ACADEMY - ADMIN PANEL 💰</h1>
+    <nav></nav>
+  </header>
+
+  <div class="container">
+    <h2 style="color: var(--golden); margin: 2rem 0;">🛡️ Admin Dashboard</h2>
+
+    <!-- Admin Navigation Tabs - STICKY -->
+    <div class="admin-nav-sticky" style="display: flex; gap: 0.5rem; margin-bottom: 2rem; flex-wrap: wrap; position: sticky; top: 80px; background: rgba(15, 31, 53, 0.95); padding: 1rem; border-radius: 10px; z-index: 50; backdrop-filter: blur(10px); border: 1px solid var(--accent-blue); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);">
+      <button class="btn btn-primary" onclick="showAdminTab('dashboard')" style="flex: 1; min-width: 120px;">📊 Dashboard</button>
+      <button class="btn btn-secondary" onclick="showAdminTab('users')" style="flex: 1; min-width: 120px;">👥 Users</button>
+      <button class="btn btn-secondary" onclick="showAdminTab('courses')" style="flex: 1; min-width: 120px;">📚 Courses</button>
+      <button class="btn btn-secondary" onclick="showAdminTab('products')" style="flex: 1; min-width: 100px;">🤖 Products</button>
+      <button class="btn btn-secondary" onclick="showAdminTab('support')" style="flex: 1; min-width: 120px;">⚙️ Support</button>
+      <button class="btn btn-secondary" onclick="showAdminTab('settings')" style="flex: 1; min-width: 120px;">🔗 Social Links</button>
+    </div>
+
+    <!-- DASHBOARD TAB -->
+    <div id="dashboard" class="admin-tab">
+      <h3 style="color: var(--golden); margin-bottom: 1rem;">Dashboard Statistics</h3>
+      <div class="grid grid-4">
+        <div class="card">
+          <h4 style="color: var(--golden);">👥 Total Users</h4>
+          <p style="font-size: 2.5rem; color: var(--golden); margin: 1rem 0;" id="totalUsers">0</p>
+          <p>Registered members</p>
+        </div>
+        <div class="card">
+          <h4 style="color: var(--golden);">📚 Total Courses</h4>
+          <p style="font-size: 2.5rem; color: var(--golden); margin: 1rem 0;" id="totalCourses">0</p>
+          <p>Published courses</p>
+        </div>
+        <div class="card">
+          <h4 style="color: var(--golden);">🤖 Total Products</h4>
+          <p style="font-size: 2.5rem; color: var(--golden); margin: 1rem 0;" id="totalProducts">0</p>
+          <p>Trading tools</p>
+        </div>
+        <div class="card">
+          <h4 style="color: var(--golden);">👨‍💼 Admin Users</h4>
+          <p style="font-size: 2.5rem; color: var(--golden); margin: 1rem 0;" id="adminUsers">0</p>
+          <p>Active admins</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- USERS TAB -->
+    <div id="users" class="admin-tab" style="display: none;">
+      <h3 style="color: var(--golden); margin-bottom: 1rem;">Manage Registered Users</h3>
+      <div id="usersList" class="grid grid-1">
+        <div class="spinner"></div>
+      </div>
+    </div>
+
+    <!-- COURSES TAB -->
+    <div id="courses" class="admin-tab" style="display: none;">
+      <h3 style="color: var(--golden); margin-bottom: 1rem;">Manage Courses</h3>
+      
+      <div style="position: sticky; top: 180px; background: rgba(15, 31, 53, 0.95); padding: 1rem; border-radius: 10px; margin-bottom: 2rem; z-index: 40;">
+        <button class="btn btn-primary" onclick="toggleForm('addCourseForm')" style="width: 100%;">➕ Add New Course</button>
+      </div>
+
+      <!-- Add Course Form -->
+      <div id="addCourseForm" class="card" style="display: none; margin-bottom: 2rem; max-width: 600px;">
+        <h4 style="color: var(--golden);">Create New Course</h4>
+        <form id="courseForm">
+          <div class="form-group">
+            <label for="courseTitle">Course Title</label>
+            <input type="text" id="courseTitle" required placeholder="e.g., Advanced Risk Management">
+          </div>
+          <div class="form-group">
+            <label for="courseCategory">Category</label>
+            <select id="courseCategory" required>
+              <option value="">Select Category</option>
+              <option value="Risk Management">Risk Management</option>
+              <option value="Trading Strategies">Trading Strategies</option>
+              <option value="Psychology">Psychology</option>
+              <option value="Technical Analysis">Technical Analysis</option>
+              <option value="Fundamental Analysis">Fundamental Analysis</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="courseDescription">Description</label>
+            <textarea id="courseDescription" rows="4" required placeholder="Course description"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="coursePrice">Price ($)</label>
+            <input type="number" id="coursePrice" required min="0" step="0.01" placeholder="99.99">
+          </div>
+          <div class="form-group">
+            <label for="courseLevel">Level</label>
+            <select id="courseLevel">
+              <option value="Beginner">Beginner</option>
+              <option value="Intermediate">Intermediate</option>
+              <option value="Advanced">Advanced</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-success" style="width: 100%;">Create Course</button>
+        </form>
+      </div>
+
+      <!-- Courses List -->
+      <div id="coursesList" class="grid grid-3">
+        <div class="spinner"></div>
+      </div>
+    </div>
+
+    <!-- PRODUCTS TAB -->
+    <div id="products" class="admin-tab" style="display: none;">
+      <h3 style="color: var(--golden); margin-bottom: 1rem;">Manage Products (Bots, EAs, Guides)</h3>
+      
+      <div style="position: sticky; top: 180px; background: rgba(15, 31, 53, 0.95); padding: 1rem; border-radius: 10px; margin-bottom: 2rem; z-index: 40;">
+        <button class="btn btn-primary" onclick="toggleForm('addProductForm')" style="width: 100%;">➕ Add New Product</button>
+      </div>
+
+      <!-- Add Product Form -->
+      <div id="addProductForm" class="card" style="display: none; margin-bottom: 2rem; max-width: 600px;">
+        <h4 style="color: var(--golden);">Add Trading Product</h4>
+        <form id="productForm">
+          <div class="form-group">
+            <label for="productName">Product Name</label>
+            <input type="text" id="productName" required placeholder="e.g., Deriv Binary Master Bot">
+          </div>
+          <div class="form-group">
+            <label for="productType">Product Type</label>
+            <select id="productType" required>
+              <option value="">Select Type</option>
+              <option value="Trading Bot XML">Trading Bot (XML)</option>
+              <option value="MT5 EA">MT5 Expert Advisor</option>
+              <option value="Strategy Guide">Strategy Guide</option>
+              <option value="Signal Service">Signal Service</option>
+              <option value="Course Bundle">Course Bundle</option>
+              <option value="Indicator">Custom Indicator</option>
+              <option value="Script">Trading Script</option>
+              <option value="Webinar">Webinar Recording</option>
+              <option value="Template">Trading Template</option>
+              <option value="eBook">eBook/PDF Guide</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="productDescription">Description</label>
+            <textarea id="productDescription" rows="4" required placeholder="Product details, features, and benefits"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="productPrice">Price ($)</label>
+            <input type="number" id="productPrice" required min="0" step="0.01" placeholder="49.99">
+          </div>
+          <div class="form-group">
+            <label for="productCompatibility">Compatibility</label>
+            <input type="text" id="productCompatibility" placeholder="e.g., Deriv Trading Platform, MT5, cTrader">
+          </div>
+          <div class="form-group">
+            <label for="productDocumentation">Documentation URL</label>
+            <input type="text" id="productDocumentation" placeholder="https://...">
+          </div>
+          <div class="form-group">
+            <label for="productFileUrl">Download Link / File URL</label>
+            <input type="text" id="productFileUrl" placeholder="https://...">
+          </div>
+          <button type="submit" class="btn btn-success" style="width: 100%;">Add Product</button>
+        </form>
+      </div>
+
+      <!-- Products Count Info -->
+      <div style="background: rgba(26, 61, 92, 0.3); border: 1px solid var(--accent-blue); border-radius: 10px; padding: 1.5rem; margin-bottom: 2rem;">
+        <h4 style="color: var(--golden); margin-bottom: 0.5rem;">📊 Products Dashboard</h4>
+        <p style="color: var(--light-text);">Total Products: <strong id="productCount" style="color: var(--golden);">0</strong></p>
+        <p style="font-size: 0.85rem; color: #999; margin-top: 0.5rem;">Add unlimited products to your store. Each product appears on the public products page.</p>
+      </div>
+
+      <!-- Products List -->
+      <div id="productsList" class="grid grid-3">
+        <div class="spinner"></div>
+      </div>
+    </div>
+
+    <!-div style="position: sticky; top: 180px; background: rgba(15, 31, 53, 0.95); padding: 1rem; border-radius: 10px; margin-bottom: 2rem; z-index: 40;">
+        <button class="btn btn-primary" onclick="toggleForm('addFaqForm')" style="width: 100%;">➕ Add FAQ Entry</button>
+      </div
+    <div id="support" class="admin-tab" style="display: none;">
+      <h3 style="color: var(--golden); margin-bottom: 1rem;">Support Center Management</h3>
+      
+      <button class="btn btn-primary" onclick="toggleForm('addFaqForm')" style="margin-bottom: 1rem;">+ Add FAQ Entry</button>
+
+      <!-- Add FAQ Form -->
+      <div id="addFaqForm" class="card" style="display: none; margin-bottom: 2rem; max-width: 600px;">
+        <h4 style="color: var(--golden);">Add FAQ Entry</h4>
+        <form id="faqForm">
+          <div class="form-group">
+            <label for="faqQuestion">Question</label>
+            <input type="text" id="faqQuestion" required placeholder="Frequently asked question">
+          </div>
+          <div class="form-group">
+            <label for="faqAnswer">Answer</label>
+            <textarea id="faqAnswer" rows="4" required placeholder="Detailed answer"></textarea>
+          </div>
+          <button type="submit" class="btn btn-success" style="width: 100%;">Add FAQ</button>
+        </form>
+      </div>
+
+      <!-- Support Tickets -->
+      <h4 style="color: var(--golden); margin-top: 2rem; margin-bottom: 1rem;">📋 Support Tickets</h4>
+      
+      <!-- Ticket Filters -->
+      <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+        <button class="btn btn-secondary" onclick="filterTickets('all')" style="flex: 1; min-width: 100px;">All Tickets</button>
+        <button class="btn btn-secondary" onclick="filterTickets('Open')" style="flex: 1; min-width: 100px;">🔴 Open</button>
+        <button class="btn btn-secondary" onclick="filterTickets('In Progress')" style="flex: 1; min-width: 100px;">🟡 In Progress</button>
+        <button class="btn btn-secondary" onclick="filterTickets('Resolved')" style="flex: 1; min-width: 100px;">🟢 Resolved</button>
+        <button class="btn btn-secondary" onclick="filterTickets('Closed')" style="flex: 1; min-width: 100px;">⚫ Closed</button>
+      </div>
+
+      <div id="supportTicketsList" class="grid grid-1">
+        <div class="spinner"></div>
+      </div>
+    </div>
+
+    <!-- TICKET DETAIL MODAL -->
+    <div id="ticketModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.7); z-index: 1000; overflow-y: auto; padding: 2rem 0;">
+      <div class="card" style="max-width: 800px; margin: 2rem auto;">
+        <button onclick="closeTicketModal()" style="float: right; background: none; border: none; color: var(--golden); font-size: 1.5rem; cursor: pointer;">✕</button>
+        
+        <h3 style="color: var(--golden); margin-bottom: 1rem;">📋 Ticket Details</h3>
+        
+        <!-- Ticket Header -->
+        <div style="background: rgba(26, 61, 92, 0.3); padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; border-left: 4px solid var(--golden);">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+            <div>
+              <p style="color: #999; font-size: 0.9rem;">Ticket ID</p>
+              <p style="color: var(--golden); font-weight: bold; font-family: monospace;" id="ticketId">-</p>
+            </div>
+            <div>
+              <p style="color: #999; font-size: 0.9rem;">Status</p>
+              <select id="ticketStatus" style="background: rgba(10, 22, 40, 0.8); color: var(--golden); border: 1px solid var(--accent-blue); padding: 0.5rem; border-radius: 4px; width: 100%;">
+                <option value="Open">🔴 Open</option>
+                <option value="In Progress">🟡 In Progress</option>
+                <option value="Resolved">🟢 Resolved</option>
+                <option value="Closed">⚫ Closed</option>
+              </select>
+            </div>
+          </div>
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div>
+              <p style="color: #999; font-size: 0.9rem;">User</p>
+              <p style="color: #fff;" id="ticketUser">-</p>
+            </div>
+            <div>
+              <p style="color: #999; font-size: 0.9rem;">Priority</p>
+              <p id="ticketPriority" style="font-weight: bold;">-</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ticket Subject -->
+        <div style="margin-bottom: 2rem;">
+          <h4 style="color: var(--golden); margin-bottom: 0.5rem;">Subject</h4>
+          <p id="ticketSubject" style="background: rgba(26, 61, 92, 0.3); padding: 1rem; border-radius: 4px;">-</p>
+        </div>
+
+        <!-- Original Message -->
+        <div style="margin-bottom: 2rem;">
+          <h4 style="color: var(--golden); margin-bottom: 0.5rem;">Original Issue</h4>
+          <div style="background: rgba(26, 61, 92, 0.3); padding: 1rem; border-radius: 4px; max-height: 200px; overflow-y: auto;">
+            <p id="ticketMessage" style="word-break: break-word;">-</p>
+          </div>
+          <p style="color: #999; font-size: 0.85rem; margin-top: 0.5rem;" id="ticketDate">-</p>
+        </div>
+
+        <!-- Conversation Thread -->
+        <div style="margin-bottom: 2rem;">
+          <h4 style="color: var(--golden); margin-bottom: 1rem;">💬 Conversation Thread</h4>
+          <div id="ticketResponses" style="background: rgba(26, 61, 92, 0.2); padding: 1.5rem; border-radius: 8px; max-height: 400px; overflow-y: auto;">
+            <p style="color: #888;">No responses yet</p>
+          </div>
+        </div>
+
+        <!-- Response Form -->
+        <div style="background: rgba(26, 61, 92, 0.3); padding: 1.5rem; border-radius: 8px;">
+          <h4 style="color: var(--golden); margin-bottom: 1rem;">Write Response</h4>
+          <form id="ticketResponseForm">
+            <div class="form-group">
+              <label for="responseMessage" style="color: #999;">Your Response</label>
+              <textarea id="responseMessage" rows="4" required placeholder="Type your response to the user..." style="background: rgba(10, 22, 40, 0.8); color: #fff; border: 1px solid var(--accent-blue); padding: 0.8rem; border-radius: 4px; font-family: Arial, sans-serif; width: 100%; resize: vertical;"></textarea>
+            </div>
+            <button type="submit" class="btn btn-success" style="width: 100%;">✓ Send Response & Update Status</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- SETTINGS TAB - Social Media Links -->
+    <div id="settings" class="admin-tab" style="display: none;">
+      <h3 style="color: var(--golden); margin-bottom: 1rem;">🔗 Social Media & Contact Links</h3>
+      
+      <div class="card" style="max-width: 700px;">
+        <h4 style="color: var(--golden); margin-bottom: 2rem;">Add/Edit Social Media & Contact Information</h4>
+        <form id="settingsForm">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+            <!-- Telegram -->
+            <div class="form-group">
+              <label for="telegram">📱 Telegram Link</label>
+              <input type="url" id="telegram" placeholder="https://t.me/yourhandle">
+            </div>
+
+            <!-- WhatsApp -->
+            <div class="form-group">
+              <label for="whatsapp">💬 WhatsApp Link</label>
+              <input type="url" id="whatsapp" placeholder="https://wa.me/1234567890">
+            </div>
+
+            <!-- YouTube -->
+            <div class="form-group">
+              <label for="youtube">📺 YouTube Channel</label>
+              <input type="url" id="youtube" placeholder="https://youtube.com/@yourhandle">
+            </div>
+
+            <!-- TikTok -->
+            <div class="form-group">
+              <label for="tiktok">🎵 TikTok Profile</label>
+              <input type="url" id="tiktok" placeholder="https://tiktok.com/@yourhandle">
+            </div>
+
+            <!-- Instagram -->
+            <div class="form-group">
+              <label for="instagram">📸 Instagram Profile</label>
+              <input type="url" id="instagram" placeholder="https://instagram.com/yourhandle">
+            </div>
+
+            <!-- Facebook -->
+            <div class="form-group">
+              <label for="facebook">👍 Facebook Page</label>
+              <input type="url" id="facebook" placeholder="https://facebook.com/yourpage">
+            </div>
+
+            <!-- Twitter/X -->
+            <div class="form-group">
+              <label for="twitter">𝕏 Twitter/X Handle</label>
+              <input type="url" id="twitter" placeholder="https://twitter.com/yourhandle">
+            </div>
+
+            <!-- LinkedIn -->
+            <div class="form-group">
+              <label for="linkedin">💼 LinkedIn Profile</label>
+              <input type="url" id="linkedin" placeholder="https://linkedin.com/company/yourcompany">
+            </div>
+
+            <!-- Discord -->
+            <div class="form-group">
+              <label for="discord">🎮 Discord Server</label>
+              <input type="url" id="discord" placeholder="https://discord.gg/yourcode">
+            </div>
+
+            <!-- Email -->
+            <div class="form-group">
+              <label for="email">📧 Support Email</label>
+              <input type="email" id="email" placeholder="support@example.com">
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-success" style="width: 100%; margin-top: 2rem;">💾 Save Social Media Links</button>
+        </form>
+      </div>
+
+      <!-- Display Current Links -->
+      <div id="socialLinksPreview" style="margin-top: 2rem;">
+        <!-- Will be populated by JavaScript -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <h3>💰 Admin Control Center 💰</h3>
+    <p>Manage your Extra Dollar Academy platform</p>
+    <div class="footer-links">
+      <a href="dashboard.html">Back to Dashboard</a>
+      <a href="../index.html">Home</a>
+    </div>
+    <!-- Social Media Links with Twinkling Logos -->
+    <div style="margin: 2rem 0; padding: 2rem 0; border-top: 2px solid var(--accent-blue); border-bottom: 2px solid var(--accent-blue); text-align: center;">
+      <p style="color: var(--golden); margin-bottom: 1.5rem; font-size: 1rem; font-weight: bold;">✨ Follow Us On Social Media ✨</p>
+      <div id="footerSocialLinks" style="display: flex; justify-content: center; flex-wrap: wrap;"></div>
+    </div>
+  </footer>
+
+  <script src="../js/api.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    // Check if user is admin
+    if (!isLoggedIn() || !isAdmin()) {
+      showAlert('Access Denied: Admin only', 'error');
+      setTimeout(() => window.location.href = 'dashboard.html', 2000);
+    }
+
+    // Display welcome message with username
+    document.addEventListener('DOMContentLoaded', function() {
+      const user = getUser();
+      if (user && user.username) {
+        document.getElementById('welcomeUsername').textContent = user.username;
+      }
+    });
+
+    // Show admin tab
+    function showAdminTab(tabName) {
+      document.querySelectorAll('.admin-tab').forEach(tab => tab.style.display = 'none');
+      document.getElementById(tabName).style.display = 'block';
+
+      if (tabName === 'dashboard') {
+        loadDashboardStats();
+      } else if (tabName === 'users') {
+        loadUsers();
+      } else if (tabName === 'courses') {
+        loadAdminCourses();
+      } else if (tabName === 'products') {
+        loadAdminProducts();
+      } else if (tabName === 'support') {
+        loadSupportTickets();
+      } else if (tabName === 'settings') {
+        loadSettings();
+      }
+    }
+
+    // Toggle form visibility
+    function toggleForm(formId) {
+      const form = document.getElementById(formId);
+      form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    }
+
+    // Load dashboard stats
+    async function loadDashboardStats() {
+      try {
+        const stats = await apiCall('/admin/dashboard/stats', 'GET');
+        document.getElementById('totalUsers').textContent = stats.totalUsers;
+        document.getElementById('totalCourses').textContent = stats.totalCourses;
+        document.getElementById('totalProducts').textContent = stats.totalProducts;
+        document.getElementById('adminUsers').textContent = stats.adminUsers;
+      } catch (error) {
+        console.error('Error loading stats:', error);
+      }
+    }
+
+    // Load all users
+    async function loadUsers() {
+      try {
+        const users = await apiCall('/admin/users', 'GET');
+        const container = document.getElementById('usersList');
+
+        if (users.length === 0) {
+          container.innerHTML = '<p style="color: #888;">No users found</p>';
+          return;
+        }
+
+        container.innerHTML = users.map(user => `
+          <div class="card">
+            <h4 style="color: var(--golden);">${user.username}</h4>
+            <p><strong>Email:</strong> ${user.email}</p>
+            <p><strong>Phone:</strong> ${user.phone}</p>
+            <p><strong>Registered:</strong> ${new Date(user.registeredAt).toLocaleDateString()}</p>
+            <p><strong>Status:</strong> <span style="color: var(--success-green);">${user.isAdmin ? 'Admin' : 'User'}</span></p>
+            <button class="btn btn-secondary" onclick="viewUserDetails('${user._id}')">View Details</button>
+          </div>
+        `).join('');
+      } catch (error) {
+        document.getElementById('usersList').innerHTML = '<p style="color: var(--error-red);">Error loading users</p>';
+      }
+    }
+
+    // Load courses for admin
+    async function loadAdminCourses() {
+      try {
+        const courses = await apiCall('/courses', 'GET');
+        const container = document.getElementById('coursesList');
+
+        if (courses.length === 0) {
+          container.innerHTML = '<p style="color: #888;">No courses yet. Create your first course above.</p>';
+          return;
+        }
+
+        container.innerHTML = courses.map(course => `
+          <div class="card">
+            <h4 style="color: var(--golden);">${course.title}</h4>
+            <p><strong>Category:</strong> ${course.category}</p>
+            <p><strong>Price:</strong> $${course.price}</p>
+            <p><strong>Level:</strong> ${course.level}</p>
+            <p><strong>Enrolled:</strong> ${course.enrolledCount || 0}</p>
+            <div style="display: flex; gap: 0.5rem;">
+              <button class="btn btn-secondary" onclick="editCourse('${course._id}')">Edit</button>
+              <button class="btn btn-danger" onclick="deleteCourse('${course._id}')">Delete</button>
+            </div>
+          </div>
+        `).join('');
+      } catch (error) {
+        document.getElementById('coursesList').innerHTML = '<p style="color: var(--error-red);">Error loading courses</p>';
+      }
+    }
+
+    // Load products for admin
+    async function loadAdminProducts() {
+      try {
+        const products = await apiCall('/admin/products', 'GET');
+        const container = document.getElementById('productsList');
+        
+        // Update product count
+        document.getElementById('productCount').textContent = products.length;
+
+        if (products.length === 0) {
+          container.innerHTML = '<p style="color: #888;">No products yet. Add your first product above.</p>';
+          return;
+        }
+
+        container.innerHTML = products.map(product => `
+          <div class="card">
+            <h4 style="color: var(--golden);">${product.name}</h4>
+            <p><strong>Type:</strong> ${product.type}</p>
+            <p><strong>Price:</strong> $${product.price}</p>
+            <p><strong>Downloads:</strong> ${product.downloadCount}</p>
+            <p><strong>Rating:</strong> ⭐ ${product.rating}/5</p>
+            <div style="display: flex; gap: 0.5rem;">
+              <button class="btn btn-secondary" onclick="editProduct('${product._id}')">Edit</button>
+              <button class="btn btn-danger" onclick="deleteProduct('${product._id}')">Delete</button>
+            </div>
+          </div>
+        `).join('');
+      } catch (error) {
+        document.getElementById('productsList').innerHTML = '<p style="color: var(--error-red);">Error loading products</p>';
+      }
+    }
+
+    // All tickets data
+    let allTickets = [];
+    let currentFilter = 'all';
+
+    // Load support tickets
+    async function loadSupportTickets() {
+      try {
+        console.log('[Admin] Loading support tickets...');
+        const tickets = await apiCall('/support', 'GET');
+        console.log('[Admin] Tickets loaded:', tickets);
+        allTickets = Array.isArray(tickets) ? tickets : [];
+        displayTickets(allTickets);
+      } catch (error) {
+        console.error('[Admin] Error loading tickets:', error);
+        document.getElementById('supportTicketsList').innerHTML = '<p style="color: var(--error-red);">Error loading tickets: ' + error.message + '</p>';
+      }
+    }
+
+    // Display tickets with better UI
+    function displayTickets(tickets) {
+      const container = document.getElementById('supportTicketsList');
+
+      try {
+        if (!tickets || tickets.length === 0) {
+          container.innerHTML = '<p style="color: #888;">No support tickets</p>';
+          return;
+        }
+
+        container.innerHTML = tickets.map(ticket => {
+          // Handle missing data with defaults
+          const status = ticket.status || 'Open';
+          const priority = ticket.priority || 'Medium';
+          const subject = ticket.subject || 'No Subject';
+          const message = ticket.message || 'No message provided';
+          const createdDate = ticket.createdAt ? new Date(ticket.createdAt).toLocaleString() : 'Unknown date';
+          const responseCount = (ticket.responses && ticket.responses.length) || 0;
+          const username = ticket.user?.username || 'Unknown User';
+          const email = ticket.user?.email || 'No email';
+          const ticketId = ticket._id || 'Unknown ID';
+          
+          const statusIcons = {
+            'Open': '🔴',
+            'In Progress': '🟡',
+            'Resolved': '🟢',
+            'Closed': '⚫'
+          };
+
+          const priorityColors = {
+            'Low': '#4CAF50',
+            'Medium': '#FFC107',
+            'High': '#FF5722'
+          };
+
+          return `
+            <div class="card" style="border-left: 4px solid ${priorityColors[priority]};">
+              <div style="display: grid; grid-template-columns: 1fr auto; gap: 1rem; align-items: start;">
+                <div>
+                  <h4 style="color: var(--golden); margin-bottom: 0.5rem;">📋 ${subject}</h4>
+                  <p style="margin: 0.3rem 0;"><strong>User:</strong> ${username} (${email})</p>
+                  <p style="margin: 0.3rem 0;"><strong>Created:</strong> ${createdDate}</p>
+                  <p style="margin: 0.3rem 0; color: #888; font-size: 0.9rem;">ID: <span style="font-family: monospace; color: #aaa;">${ticketId.substring(0, 8)}...</span></p>
+                </div>
+                <div style="text-align: right;">
+                  <p style="margin: 0.3rem 0; font-size: 1.2rem;">${statusIcons[status] || '❓'} ${status}</p>
+                  <p style="margin: 0.3rem 0; color: ${priorityColors[priority]}; font-weight: bold;">Priority: ${priority}</p>
+                  <p style="margin: 0.3rem 0; color: var(--accent-blue);">💬 ${responseCount} response(s)</p>
+                </div>
+              </div>
+              <p style="color: #999; margin: 1rem 0 0 0; padding: 0.8rem; background: rgba(26, 61, 92, 0.2); border-radius: 4px;">${message.substring(0, 150)}${message.length > 150 ? '...' : ''}</p>
+              <button class="btn btn-primary" onclick="openTicketModal('${ticketId}')" style="width: 100%; margin-top: 1rem;">View & Respond</button>
+            </div>
+          `;
+        }).join('');
+      } catch (error) {
+        console.error('[Admin] Error displaying tickets:', error);
+        container.innerHTML = '<p style="color: var(--error-red);">Error displaying tickets: ' + error.message + '</p>';
+      }
+    }
+
+    // Filter tickets by status
+    function filterTickets(status) {
+      currentFilter = status;
+      if (status === 'all') {
+        displayTickets(allTickets);
+      } else {
+        displayTickets(allTickets.filter(t => t.status === status));
+      }
+    }
+
+    // Open ticket modal
+    async function openTicketModal(ticketId) {
+      try {
+        const ticket = allTickets.find(t => t._id === ticketId);
+        if (!ticket) return;
+
+        // Populate ticket details
+        document.getElementById('ticketId').textContent = ticket._id;
+        document.getElementById('ticketUser').textContent = `${ticket.user?.username} (${ticket.user?.email})`;
+        document.getElementById('ticketSubject').textContent = ticket.subject;
+        document.getElementById('ticketMessage').textContent = ticket.message;
+        document.getElementById('ticketDate').textContent = `Submitted on ${new Date(ticket.createdAt).toLocaleString()}`;
+        document.getElementById('ticketPriority').textContent = ticket.priority;
+        document.getElementById('ticketStatus').value = ticket.status;
+
+        // Display responses
+        const responsesContainer = document.getElementById('ticketResponses');
+        if (ticket.responses && ticket.responses.length > 0) {
+          responsesContainer.innerHTML = ticket.responses.map((response, index) => `
+            <div style="background: rgba(15, 31, 53, 0.5); padding: 1rem; border-radius: 4px; margin-bottom: 1rem; border-left: 3px solid var(--golden);">
+              <p style="color: var(--golden); font-weight: bold; margin: 0 0 0.5rem 0;">↳ ${response.responder?.username || 'Admin'}</p>
+              <p style="color: #999; font-size: 0.85rem; margin: 0 0 0.5rem 0;">${new Date(response.date).toLocaleString()}</p>
+              <p style="margin: 0; line-height: 1.5;">${response.message}</p>
+            </div>
+          `).join('');
+        } else {
+          responsesContainer.innerHTML = '<p style="color: #888;">No responses yet. Send your first response below.</p>';
+        }
+
+        // Store current ticket ID for response submission
+        document.getElementById('ticketResponseForm').dataset.ticketId = ticketId;
+
+        // Show modal
+        document.getElementById('ticketModal').style.display = 'block';
+      } catch (error) {
+        showAlert('Error loading ticket: ' + error.message, 'error');
+      }
+    }
+
+    // Close modal
+    function closeTicketModal() {
+      document.getElementById('ticketModal').style.display = 'none';
+      document.getElementById('ticketResponseForm').reset();
+    }
+
+    // Handle ticket response submission
+    document.getElementById('ticketResponseForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      try {
+        const ticketId = e.target.dataset.ticketId;
+        const message = document.getElementById('responseMessage').value;
+        const status = document.getElementById('ticketStatus').value;
+        const user = getUser();
+
+        await apiCall(`/support/${ticketId}/response`, 'POST', {
+          message,
+          adminId: user.id,
+          status
+        });
+
+        showAlert('✓ Response sent and ticket status updated!', 'success');
+
+        // Reload tickets
+        loadSupportTickets();
+        closeTicketModal();
+      } catch (error) {
+        showAlert('Error sending response: ' + error.message, 'error');
+      }
+    });
+
+    // Close modal when clicking outside
+    document.getElementById('ticketModal').addEventListener('click', (e) => {
+      if (e.target.id === 'ticketModal') {
+        closeTicketModal();
+      }
+    });
+
+    // Load settings
+    async function loadSettings() {
+      try {
+        const settings = await apiCall('/settings', 'GET');
+        
+        // Populate form with current values
+        document.getElementById('telegram').value = settings.socialMedia?.telegram || '';
+        document.getElementById('whatsapp').value = settings.socialMedia?.whatsapp || '';
+        document.getElementById('youtube').value = settings.socialMedia?.youtube || '';
+        document.getElementById('tiktok').value = settings.socialMedia?.tiktok || '';
+        document.getElementById('instagram').value = settings.socialMedia?.instagram || '';
+        document.getElementById('facebook').value = settings.socialMedia?.facebook || '';
+        document.getElementById('twitter').value = settings.socialMedia?.twitter || '';
+        document.getElementById('linkedin').value = settings.socialMedia?.linkedin || '';
+        document.getElementById('discord').value = settings.socialMedia?.discord || '';
+        document.getElementById('email').value = settings.socialMedia?.email || '';
+        
+        // Display preview
+        displaySocialLinksPreview(settings.socialMedia);
+      } catch (error) {
+        showAlert('Error loading settings', 'error');
+      }
+    }
+
+    // Display social links preview
+    function displaySocialLinksPreview(socialMedia) {
+      const preview = document.getElementById('socialLinksPreview');
+      
+      const links = [
+        { icon: '📱', label: 'Telegram', url: socialMedia.telegram },
+        { icon: '💬', label: 'WhatsApp', url: socialMedia.whatsapp },
+        { icon: '📺', label: 'YouTube', url: socialMedia.youtube },
+        { icon: '🎵', label: 'TikTok', url: socialMedia.tiktok },
+        { icon: '📸', label: 'Instagram', url: socialMedia.instagram },
+        { icon: '👍', label: 'Facebook', url: socialMedia.facebook },
+        { icon: '𝕏', label: 'Twitter/X', url: socialMedia.twitter },
+        { icon: '💼', label: 'LinkedIn', url: socialMedia.linkedin },
+        { icon: '🎮', label: 'Discord', url: socialMedia.discord },
+        { icon: '📧', label: 'Email', url: socialMedia.email }
+      ];
+      
+      const activeLinks = links.filter(l => l.url);
+      
+      if (activeLinks.length === 0) {
+        preview.innerHTML = '<p style="color: #888;">No social media links configured yet.</p>';
+        return;
+      }
+      
+      preview.innerHTML = `
+        <h4 style="color: var(--golden); margin-bottom: 1rem;">✓ Current Social Media Links</h4>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+          ${activeLinks.map(link => `
+            <a href="${link.url}" target="_blank" style="text-decoration: none;">
+              <div style="background: rgba(26, 61, 92, 0.4); border: 1px solid var(--accent-blue); border-radius: 8px; padding: 1rem; text-align: center; transition: all 0.3s; cursor: pointer;" onmouseover="this.style.borderColor='var(--golden)'" onmouseout="this.style.borderColor='var(--accent-blue)'">
+                <p style="font-size: 2rem; margin-bottom: 0.5rem;">${link.icon}</p>
+                <p style="color: var(--golden); font-weight: bold;">${link.label}</p>
+                <p style="color: #999; font-size: 0.8rem; word-break: break-all;">${link.url.substring(0, 30)}...</p>
+              </div>
+            </a>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    // Create course
+    document.getElementById('courseForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      try {
+        const user = getUser();
+        await apiCall('/courses', 'POST', {
+          title: document.getElementById('courseTitle').value,
+          description: document.getElementById('courseDescription').value,
+          price: parseFloat(document.getElementById('coursePrice').value),
+          category: document.getElementById('courseCategory').value,
+          level: document.getElementById('courseLevel').value,
+          instructorId: user.id
+        });
+
+        showAlert('Course created successfully!', 'success');
+        document.getElementById('courseForm').reset();
+        document.getElementById('addCourseForm').style.display = 'none';
+        loadAdminCourses();
+      } catch (error) {
+        showAlert(error.message, 'error');
+      }
+    });
+
+    // Create product
+    document.getElementById('productForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      try {
+        await apiCall('/admin/products', 'POST', {
+          name: document.getElementById('productName').value,
+          description: document.getElementById('productDescription').value,
+          type: document.getElementById('productType').value,
+          price: parseFloat(document.getElementById('productPrice').value),
+          compatibility: document.getElementById('productCompatibility').value,
+          documentation: document.getElementById('productDocumentation').value,
+          fileUrl: document.getElementById('productFileUrl').value
+        });
+
+        showAlert('Product added successfully!', 'success');
+        document.getElementById('productForm').reset();
+        document.getElementById('addProductForm').style.display = 'none';
+        loadAdminProducts();
+      } catch (error) {
+        showAlert(error.message, 'error');
+      }
+    });
+
+    // Update settings
+    document.getElementById('settingsForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      try {
+        await apiCall('/settings', 'PUT', {
+          socialMedia: {
+            telegram: document.getElementById('telegram').value,
+            whatsapp: document.getElementById('whatsapp').value,
+            youtube: document.getElementById('youtube').value,
+            tiktok: document.getElementById('tiktok').value,
+            instagram: document.getElementById('instagram').value,
+            facebook: document.getElementById('facebook').value,
+            twitter: document.getElementById('twitter').value,
+            linkedin: document.getElementById('linkedin').value,
+            discord: document.getElementById('discord').value,
+            email: document.getElementById('email').value
+          }
+        });
+
+        showAlert('✓ Social media links updated successfully!', 'success');
+        loadSettings();
+      } catch (error) {
+        showAlert(error.message, 'error');
+      }
+    });
+
+    // Delete course
+    async function deleteCourse(courseId) {
+      if (confirm('Are you sure you want to delete this course?')) {
+        try {
+          await apiCall(`/courses/${courseId}`, 'DELETE');
+          showAlert('Course deleted', 'success');
+          loadAdminCourses();
+        } catch (error) {
+          showAlert(error.message, 'error');
+        }
+      }
+    }
+
+    // Delete product
+    async function deleteProduct(productId) {
+      if (confirm('Are you sure you want to delete this product?')) {
+        try {
+          await apiCall(`/admin/products/${productId}`, 'DELETE');
+          showAlert('Product deleted', 'success');
+          loadAdminProducts();
+        } catch (error) {
+          showAlert(error.message, 'error');
+        }
+      }
+    }
+
+    // Placeholder functions
+    function editCourse(courseId) {
+      alert('Edit course feature coming soon!');
+    }
+
+    function editProduct(productId) {
+      alert('Edit product feature coming soon!');
+    }
+
+    function viewUserDetails(userId) {
+      alert('User details feature coming soon!');
+    }
+
+    function respondToTicket(ticketId) {
+      alert('Ticket response feature coming soon!');
+    }
+
+    // Load initial stats
+    loadDashboardStats();
+  </script>
+</body>
+</html>

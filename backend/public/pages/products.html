@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Products - Extra Dollar Academy</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="dashboard-page">
+  <div class="animated-bg"></div>
+  <div class="falling-container"></div>
+
+  <header>
+    <h1>💰 EXTRA DOLLAR ACADEMY 💰</h1>
+    <nav></nav>
+  </header>
+
+  <div class="container">
+    <h2 style="color: var(--golden); margin: 2rem 0;">🤖 Trading Bots & Expert Advisors</h2>
+
+    <!-- Product Stats -->
+    <div style="background: rgba(26, 61, 92, 0.3); border: 1px solid var(--accent-blue); border-radius: 10px; padding: 1.5rem; margin-bottom: 2rem;">
+      <h4 style="color: var(--golden); margin-bottom: 1rem;">📊 Available Products</h4>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">
+        <div style="text-align: center;">
+          <p style="font-size: 1.5rem; color: var(--golden);" id="totalCount">0</p>
+          <p style="color: #999; font-size: 0.9rem;">Total Products</p>
+        </div>
+        <div style="text-align: center;">
+          <p style="font-size: 1.5rem; color: #51cf66;" id="botCount">0</p>
+          <p style="color: #999; font-size: 0.9rem;">Trading Bots</p>
+        </div>
+        <div style="text-align: center;">
+          <p style="font-size: 1.5rem; color: #ffd700;" id="eaCount">0</p>
+          <p style="color: #999; font-size: 0.9rem;">MT5 EAs</p>
+        </div>
+        <div style="text-align: center;">
+          <p style="font-size: 1.5rem; color: #ff6b6b;" id="guideCount">0</p>
+          <p style="color: #999; font-size: 0.9rem;">Guides & Resources</p>
+        </div>
+      </div>
+    </div>
+    <div style="display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap;">
+      <button class="btn btn-secondary" onclick="filterProducts('all')">All Products</button>
+      <button class="btn btn-secondary" onclick="filterProducts('Trading Bot XML')">XML Bots</button>
+      <button class="btn btn-secondary" onclick="filterProducts('MT5 EA')">MT5 EAs</button>
+      <button class="btn btn-secondary" onclick="filterProducts('Strategy Guide')">Guides</button>
+      <button class="btn btn-secondary" onclick="filterProducts('Signal Service')">Signals</button>
+      <button class="btn btn-secondary" onclick="filterProducts('Indicator')">Indicators</button>
+      <button class="btn btn-secondary" onclick="filterProducts('eBook')">eBooks</button>
+    </div>
+
+    <!-- Products Grid -->
+    <div id="productsContainer" class="grid grid-3">
+      <div class="spinner"></div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <h3>💰 Extra Dollar Academy - Support Center 💰</h3>
+    <p>Professional trading automation tools</p>
+    
+    <!-- Social Media Links with Twinkling Logos -->
+    <div style="margin: 2rem 0; padding: 2rem 0; border-top: 2px solid var(--accent-blue); border-bottom: 2px solid var(--accent-blue); text-align: center;">
+      <p style="color: var(--golden); margin-bottom: 1.5rem; font-size: 1rem; font-weight: bold;">✨ Follow Us On Social Media ✨</p>
+      <div id="footerSocialLinks" style="display: flex; justify-content: center; flex-wrap: wrap;"></div>
+    </div>
+    
+    <!-- Support Center Info at Bottom -->
+    <div class="footer-links">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="support.html">Support</a>
+    </div>
+  </footer>
+
+  <script src="../js/api.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    let allProducts = [];
+
+    // Load products
+    async function loadProducts() {
+      try {
+        const response = await apiCall('/admin/products', 'GET');
+        allProducts = response;
+        
+        // Update statistics
+        document.getElementById('totalCount').textContent = allProducts.length;
+        document.getElementById('botCount').textContent = allProducts.filter(p => p.type === 'Trading Bot XML').length;
+        document.getElementById('eaCount').textContent = allProducts.filter(p => p.type === 'MT5 EA').length;
+        const guideCount = allProducts.filter(p => 
+          p.type === 'Strategy Guide' || p.type === 'eBook' || p.type === 'Template'
+        ).length;
+        document.getElementById('guideCount').textContent = guideCount;
+        
+        renderProducts(response);
+      } catch (error) {
+        document.getElementById('productsContainer').innerHTML = '<p style="color: var(--error-red);">Error loading products</p>';
+      }
+    }
+
+    // Render products
+    function renderProducts(products) {
+      const container = document.getElementById('productsContainer');
+      
+      if (products.length === 0) {
+        container.innerHTML = '<p style="color: var(--light-text);">No products available</p>';
+        return;
+      }
+
+      container.innerHTML = products.map(product => `
+        <div class="card">
+          <h3>${product.name}</h3>
+          <p><strong>Type:</strong> ${product.type}</p>
+          <p><strong>Price:</strong> $${product.price}</p>
+          <p style="color: #888; margin: 1rem 0;">${product.description}</p>
+          <p><strong>Rating:</strong> ⭐ ${product.rating || 0}/5</p>
+          <div style="display: flex; gap: 0.5rem;">
+            <button class="btn btn-primary twinkle" onclick="purchaseProduct('${product._id}')">Purchase & Download</button>
+            <button class="btn btn-secondary twinkle" onclick="viewProductDetails('${product._id}')">Details</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Filter products
+    function filterProducts(type) {
+      if (type === 'all') {
+        renderProducts(allProducts);
+      } else {
+        renderProducts(allProducts.filter(p => p.type === type));
+      }
+    }
+
+    // Purchase product
+    async function purchaseProduct(productId) {
+      if (!isLoggedIn()) {
+        showAlert('Please login to purchase products', 'error');
+        setTimeout(() => window.location.href = 'login.html', 1500);
+        return;
+      }
+
+      try {
+        const product = allProducts.find(p => p._id === productId);
+        showAlert(`Purchase of "${product.name}" successful! Download link sent to your email.`, 'success');
+        // In real implementation, process payment here
+      } catch (error) {
+        showAlert(error.message, 'error');
+      }
+    }
+
+    // View product details
+    function viewProductDetails(productId) {
+      const product = allProducts.find(p => p._id === productId);
+      if (product) {
+        alert(`Product: ${product.name}\n\nType: ${product.type}\nPrice: $${product.price}\n\nDescription: ${product.description}\n\nCompatibility: ${product.compatibility || 'Universal'}\n\n${product.documentation ? 'Documentation included' : ''}`);
+      }
+    }
+
+    loadProducts();
+  </script>
+</body>
+</html>

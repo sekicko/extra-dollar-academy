@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # EXTRA DOLLAR ACADEMY - Online Trading Course Platform
 
 A comprehensive full-stack web application for selling online trading courses, trading bots, MT5 Expert Advisors, and trading education materials.
@@ -317,3 +318,6 @@ Guidelines for contributing to this project:
 ---
 
 **Built with ❤️ for traders worldwide** 💰📈
+=======
+# extra-dollar-academy
+>>>>>>> 60e730b4ea012a8928743a18ef3ad2823421cbf7

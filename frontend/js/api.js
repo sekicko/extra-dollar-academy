@@ -1,5 +1,5 @@
 // API Configuration
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = 'https://extra-dollar-academy.onrender.com/api';
 
 // Helper function to make API calls
 async function apiCall(endpoint, method = 'GET', data = null) {
